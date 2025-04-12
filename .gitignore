@@ -5,6 +5,7 @@
 ### MATLAB ###
 # Windows default autosave extension
 *.asv
+*.MATLABDriveTag
 
 # OSX / *nix default autosave extension
 *.m~
