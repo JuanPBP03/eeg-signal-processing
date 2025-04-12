@@ -1,11 +1,13 @@
+% ========== DATA SEGMENTATION ==========
+load("MADHD.mat")
 Fs = 256; % Sampling frequency
-N = length(subj1_ch1_MADHD); % Number of data points
-time = (0:N-1) / Fs; % Time vector
 val_MADHD = MADHD{1, 1}; % Data for Task 1
 ch1_MADHD = val_MADHD(:, :, 1); % Channel 1 Cz
 subj1_ch1_MADHD = val_MADHD(1, :, 1); % Subject 1 - Channel 1
+N = length(subj1_ch1_MADHD); % Number of data points
+time = (0:N-1) / Fs; % Time vector
 
-% ========== Frequency Domain ==========
+% ========== Decomposition in Frequency Domain ==========
 
 % Apply Fast Fourier Transform (FFT)
 subj1_ch1_MADHD_fft = fft(subj1_ch1_MADHD);
@@ -18,7 +20,7 @@ P1 = P2(1:N/2 + 1);
 P1(2:end-1) = P1(2:end-1) * 2;
 % Frequency domain
 f = Fs / N * (0:(N/2));
-% Plot the single-sided amplitude spectrum
+% Plot the single-sided amplitude spectrum for Raw EEG Data
 figure(1);
 subplot(6, 1, 1);
 plot(f, P1);
@@ -53,7 +55,7 @@ plot(f(gamma), P1(gamma), 'y');
 xlabel('Frequency (Hz)'); ylabel('Amplitude');
 legend('Gamma Wave')
 
-% ========== Time Domain ==========
+% ========== Decomposition in Time Domain ==========
 
 % Apply bandpass filter to EEG signal
 time_vector = (0:N-1) / Fs;
@@ -90,3 +92,59 @@ subplot(6, 1, 6);
 plot(time_vector, gamma_time, 'y');
 xlabel('Time (s)'); ylabel('Amplitude');
 legend('Gamma Wave')
+
+% ========== FEATURE EXTRACTION in Time Domain ==========
+% Delta band
+%delta_mean = mean(delta_time); % Mean
+delta_median = median(delta_time); % Median
+delta_std = std(delta_time); % Standard deviation
+delta_var = var(delta_time); % Variance
+delta_skew = skewness(delta_time); % Skewness
+delta_RMS = rms(delta_time); % Root-mean-square (RMS)
+delta_kurto = kurtosis(delta_time); % Kurtosis
+
+% Theta band
+%theta_mean = mean(theta_time); % Mean
+theta_median = median(theta_time); % Median
+theta_std = std(theta_time); % Standard deviation
+theta_var = var(theta_time); % Variance
+theta_skew = skewness(theta_time); % Skewness
+theta_RMS = rms(theta_time); % Root-mean-square (RMS)
+theta_kurto = kurtosis(theta_time); % Kurtosis
+
+% Aplha band
+%alpha_mean = mean(alpha_time); % Mean
+alpha_median = median(alpha_time); % Median
+alpha_std = std(alpha_time); % Standard deviation
+alpha_var = var(alpha_time); % Variance
+alpha_skew = skewness(alpha_time); % Skewness
+alpha_RMS = rms(alpha_time); % Root-mean-square (RMS)
+alpha_kurto = kurtosis(alpha_time); % Kurtosis
+
+% Beta band
+%delta_mean = mean(beta_time); % Mean
+beta_median = median(beta_time); % Median
+beta_std = std(beta_time); % Standard deviation
+beta_var = var(beta_time); % Variance
+beta_skew = skewness(beta_time); % Skewness
+beta_RMS = rms(beta_time); % Root-mean-square (RMS)
+beta_kurto = kurtosis(beta_time); % Kurtosis
+
+% Gamma band
+%gamma_mean = mean(gamma_time); % Mean
+gamma_median = median(gamma_time); % Median
+gamma_std = std(gamma_time); % Standard deviation
+gamma_var = var(gamma_time); % Variance
+gamma_skew = skewness(gamma_time); % Skewness
+gamma_RMS = rms(gamma_time); % Root-mean-square (RMS)
+gamma_kurto = kurtosis(gamma_time); % Kurtosis
+
+% Put data into a table
+FrequencyBand = ["Delta"; "Theta"; "Aplha"; "Beta"; "Gamma"];
+Median = [delta_median; theta_median; alpha_median; beta_median; gamma_median];
+StandardDeviation = [delta_std; theta_std; alpha_std; beta_std; gamma_std];
+Variance = [delta_var; theta_var; alpha_var; beta_var; gamma_var];
+Skewness = [delta_skew; theta_skew; alpha_skew; beta_skew; gamma_skew];
+RMS = [delta_RMS; theta_RMS; alpha_RMS; beta_RMS; gamma_RMS];
+Kurtosis = [delta_kurto; theta_kurto; alpha_kurto; beta_kurto; gamma_kurto];
+features = table(FrequencyBand, Median, StandardDeviation, Variance, Skewness, RMS, Kurtosis)
