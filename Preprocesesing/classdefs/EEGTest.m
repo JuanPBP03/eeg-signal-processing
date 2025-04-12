@@ -3,40 +3,34 @@ classdef EEGTest < handle
     %   Detailed explanation goes here
 
     properties
-        Id                                      % Task ID
-        chIDs 
-        Data                                    % full data for task
-        samplerate                              % test sample rate
-        Channel  % dictionary to convert alphanumerical channel IDs to array index
+        Id   % Task ID
+        Source
     end
     properties(Dependent)
         Duration         % duration of test in seconds
-        numChannels     % number of data channels
-        times           % time stamp of each sample
-        samples     % total number of samples
-        
+        times            % time stamp of each sample
+        samples          % total number of samples
+        Data             % full data for task
+        Channel
     end
+    
+    methods (Access = ?EEGData)
+        function obj = EEGTest(taskID)
 
-    methods
-        function obj = EEGTest(taskID,chIDs, dataset, fs)
-            %EEGTEST Construct an EEGTest object
-            %   obj = EEGTest(taskId, chIDs, data, fs)
-            %   taskId - Numeric ID of the task
-            %   chIDs  - Array of channel labels or IDs (e.g., ["Fp1", "Fp2"] or [1, 2])
-            %   dataset   - EEG data [subjects x samples x channels]
-            %   fs     - Sampling rate in Hz
             if nargin == 0
                 return
-            elseif nargin == 4
-                obj.Data = dataset;
-                obj.samplerate = fs;
+            elseif nargin == 1
                 obj.Id = taskID;
-                obj.chIDs = chIDs;
-                obj.Channel = dictionary(obj.chIDs,1:length(obj.chIDs));
             else
-                error("You must initialize this object with a taskID, channel IDs, data, and sample rate"); 
+                error("You must initialize this object with a taskID"); 
             end
             
+        end
+    end
+    methods
+        function data = get.Data(obj)
+            data = obj.Source.groupData(obj.Id);
+            data = data{1};
         end
         function subdata = getSubjectData(obj, subjectID, channel)
             %GETSUBJECTDATA Extracts EEG signal for a subject and channel
@@ -48,25 +42,25 @@ classdef EEGTest < handle
             %     channel - string (e.g. 'Fp1') or index. Must match
             %     EEGTest Channel map
             %   Output:
-            %     signal - EEG samples [N x 1] from specified subject and channel
-            if channel > obj.numChannels
+            %     subdata - EEG samples [N x 1] from specified subject and channel
+            if ~any(obj.Source.Channels==channel)
                 error("Requested channel %d exceeds number of available channels (%d)", channel, obj.numChannels);
             end
-            subdata = squeeze(obj.Data(subjectID, :, channel));
+            subdata = squeeze(obj.Data(subjectID, :, obj.Channel(channel)));
         end
+        
         function prop = get.samples(obj)
             prop = size(obj.Data,2);
         end
 
         function prop = get.times(obj)
-            prop = 0:1/obj.samplerate:obj.Duration;
-        end
-
-        function prop = get.numChannels(obj)
-            prop = length(obj.chIDs);
+            prop = 0:(1/obj.Source.samplerate):obj.Duration;
         end
         function prop = get.Duration(obj)
-            prop = obj.samples/obj.samplerate;
+            prop = obj.samples/obj.Source.samplerate;
+        end
+        function prop = get.Channel(obj)
+            prop = obj.Source.Channel;
         end
     end
 end
