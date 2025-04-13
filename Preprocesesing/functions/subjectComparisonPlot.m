@@ -15,8 +15,8 @@ function subjectComparisonPlot(Test, channel, data)
 
     % If no data provided, default to normalized FFT
     if isempty(data)
-        raw = Test.Data(:, :, channel);  % [subjects x time]
-        fftdata = abs(fft(raw, [], 2));  % FFT along time axis
+        raw = squeeze(Test.Data(:, :, channel));  % [subjects x time]
+        fftdata = abs(fft(raw,[],2));  % FFT along time axis
         data = fftdata ./ max(fftdata, [], 2);  % normalize each subject
     end
 
