@@ -112,7 +112,7 @@ theta_skew = skewness(theta_time); % Skewness
 theta_RMS = rms(theta_time); % Root-mean-square (RMS)
 theta_kurto = kurtosis(theta_time); % Kurtosis
 
-% Aplha band
+% Alpha band
 %alpha_mean = mean(alpha_time); % Mean
 alpha_median = median(alpha_time); % Median
 alpha_std = std(alpha_time); % Standard deviation
@@ -148,3 +148,13 @@ Skewness = [delta_skew; theta_skew; alpha_skew; beta_skew; gamma_skew];
 RMS = [delta_RMS; theta_RMS; alpha_RMS; beta_RMS; gamma_RMS];
 Kurtosis = [delta_kurto; theta_kurto; alpha_kurto; beta_kurto; gamma_kurto];
 features = table(FrequencyBand, Median, StandardDeviation, Variance, Skewness, RMS, Kurtosis)
+
+% ========== POWER ==========
+delta_power = sum(P1(delta).^2);
+theta_power = sum(P1(theta).^2);
+alpha_power = sum(P1(alpha).^2);
+beta_power = sum(P1(beta).^2);
+gamma_power = sum(P1(delta).^2);
+theta_beta_ratio = theta_power/beta_ratio;
+BandPower = [delta_power; theta_power; alpha_power; beta_power; gamma_power];
+features = table(FrequencyBand, BandPower)
