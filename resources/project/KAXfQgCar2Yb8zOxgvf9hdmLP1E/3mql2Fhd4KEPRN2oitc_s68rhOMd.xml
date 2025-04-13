@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Info Type="StartUp" Visible="0" Icon="" File="EEG/FC.mat" Name="FC">
+    <Extension Value="50ab2c17-6e8d-497e-b3d5-a506675f98a0" Name="StartUpPrev"/>
+</Info>

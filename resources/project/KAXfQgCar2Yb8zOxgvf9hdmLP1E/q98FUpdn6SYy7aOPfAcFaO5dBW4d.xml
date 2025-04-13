@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Info Type="StartUp" Visible="0" Icon="" File="EEG/MC.mat" Name="MC">
+    <Extension Value="3f1a8545-29d9-4641-8727-90d415f8736a" Name="StartUpPrev"/>
+</Info>
