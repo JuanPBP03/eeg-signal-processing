@@ -1,7 +1,7 @@
 classdef EEGData < handle
 
-    properties (SetAccess = private)
-        groupData
+    properties (SetAccess = ?EEGTest)
+        Data
         Task
         Ntests
         samplerate
@@ -20,8 +20,10 @@ classdef EEGData < handle
     end
     methods
         function obj = EEGData(groupData,channels,fs,taskIDs)
-
-            if nargin < 4 || isempty(taskIDs)
+            arguments
+                groupData
+                channels
+                fs
                 taskIDs = 1:numel(groupData);
             end
             if numel(groupData) ~= numel(taskIDs)
@@ -31,7 +33,7 @@ classdef EEGData < handle
             for i = 1:numel(groupData)
                 obj.Task(taskIDs(i)) = EEGTest(taskIDs(i));
             end
-            obj.groupData = dictionary(taskIDs,groupData);
+            obj.Data = dictionary(taskIDs,groupData);
             obj.Ntests = numel(groupData);
             obj.samplerate = fs;
             obj.Channels = channels;
@@ -39,7 +41,33 @@ classdef EEGData < handle
             obj.Channel = dictionary(channels,1:numel(channels));
             obj.linkSources()
         end
-        function filtered = filterData(obj,task)
+        function cleanDataset = rmUnfiltered(obj)
+            arguments
+                obj
+            end
+            
+            for i = 1:obj.Ntests
+                f = obj.samplerate/obj.Task(i).samples*(0:obj.Task(i).samples-1);
+                rawFFT = obj.Task(i).normFFT;
+                raw = obj.Task(i).Data;
+                badIDx = find(f>49 & f<51);
+                chpass = squeeze(rawFFT(:,badIDx,:)<0.015);
+                subpass = all(chpass==1,[2 3]);
+                cleanData{i} = raw(subpass,:,:);
+            end
+            cleanDataset = EEGData(cleanData,obj.Channels,obj.samplerate);
+        end
+
+        function filteredDataset = filteredData(obj, filter)
+            for i = 1:obj.Ntests
+               filtered{i} = obj.Task(i).filterData(filter);
+            end
+            filteredDataset = EEGData(filtered,obj.Channels,obj.samplerate);
+        end
+        function rmSubject(obj,nums)
+            for i = 1:obj.Ntests
+                obj.Task(i).rmSubject(nums);
+            end
         end
     end
 end

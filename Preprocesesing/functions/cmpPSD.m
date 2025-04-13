@@ -1,7 +1,6 @@
-function cmpPSD(Test, freqrange, colors, channels)
+function cmpPSD(Test, colors, channels)
     arguments
         Test
-        freqrange
         colors = lines(Test.Nchannels)
         channels = [];
     end
@@ -37,9 +36,6 @@ function cmpPSD(Test, freqrange, colors, channels)
     grid on
     legend off
     view(90,0);
-    if nargin > 3
-        xlim(freqrange);
-    end
     
     
 end

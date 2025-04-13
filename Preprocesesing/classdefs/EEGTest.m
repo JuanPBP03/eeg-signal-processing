@@ -5,6 +5,7 @@ classdef EEGTest < handle
     properties
         Id   % Task ID
         Source
+        Cleaned
     end
     properties(Dependent)
         Duration         % duration of test in seconds
@@ -16,6 +17,10 @@ classdef EEGTest < handle
         Nchannels
         Subnum
         samplerate
+        FFT
+        magFFT
+        normFFT
+        FFTfreq
     end
     
     methods (Access = ?EEGData)
@@ -33,7 +38,7 @@ classdef EEGTest < handle
     end
     methods
         function data = get.Data(obj)
-            data = obj.Source.groupData(obj.Id);
+            data = obj.Source.Data(obj.Id);
             data = data{1};
         end
         function subdata = getSubjectData(obj, subjectID, channel)
@@ -77,6 +82,37 @@ classdef EEGTest < handle
         end
         function prop = get.Nchannels(obj)
             prop = size(obj.Data,3);
+        end
+        function fftdata = get.FFT(obj)
+            fftdata = fft(obj.Data,[],2);
+        end
+        function mag = get.magFFT(obj)
+            mag = abs(obj.FFT);
+        end
+        function norm = get.normFFT(obj)
+            norm = zeros(obj.Subnum,obj.samples,obj.Nchannels);
+            mFFT = obj.magFFT;
+            for i = 1:obj.Nchannels
+                norm(:,:,i) = mFFT(:,:,i)./max(mFFT(:,:,i),[],2);
+            end
+        end
+        function f = get.FFTfreq(obj)
+            
+            f = obj.samplerate / obj.samples * (0:obj.samples-1);
+        end
+        function rmSubject(obj,exclude)
+            if size(exclude, 2) > obj.Subnum
+                error("Exclude must have less entries than the number of subjects");
+            end
+            keep = setdiff(1:size(obj.Data,1), exclude);  % rows to keep
+            obj.Data = obj.Data(keep, :, :);
+        end
+        function filtered = filterData(obj, filter)
+                raw = pagetranspose(obj.Data);
+                filtered = pagetranspose(filtfilt(filter,raw));
+        end
+        function set.Data(obj, data)
+            obj.Source.Data(obj.Id) = {data};
         end
     end
 end
