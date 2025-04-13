@@ -51,7 +51,7 @@ classdef EEGData < handle
                 rawFFT = obj.Task(i).normFFT;
                 raw = obj.Task(i).Data;
                 badIDx = find(f>49 & f<51);
-                chpass = squeeze(rawFFT(:,badIDx,:)<0.01);
+                chpass = squeeze(rawFFT(:,badIDx,:)<0.015);
                 subpass = all(chpass==1,[2 3]);
                 cleanData{i} = raw(subpass,:,:);
             end
