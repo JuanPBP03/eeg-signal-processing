@@ -12,6 +12,9 @@ classdef EEGTest < handle
         samples          % total number of samples
         Data             % full data for task
         Channel
+        Channels
+        Subnum
+        samplerate
     end
     
     methods (Access = ?EEGData)
@@ -61,6 +64,15 @@ classdef EEGTest < handle
         end
         function prop = get.Channel(obj)
             prop = obj.Source.Channel;
+        end
+        function prop = get.Subnum(obj)
+            prop = height(obj.Data);
+        end
+        function prop = get.Channels(obj)
+            prop = obj.Source.Channels;
+        end
+        function prop = get.samplerate(obj)
+            prop = obj.Source.samplerate;
         end
     end
 end

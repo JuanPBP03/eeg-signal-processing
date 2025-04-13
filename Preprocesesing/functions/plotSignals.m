@@ -6,7 +6,6 @@ for i = 1:2
     fsig = abs(fft(signals(i,:)));
     fsig = fsig/max(fsig);
     
-    figure(i);
     subplot(2,1,1);
     plot(times,signals(i,:));
     xlabel("Time (s)");

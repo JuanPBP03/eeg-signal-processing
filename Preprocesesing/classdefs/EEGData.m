@@ -39,6 +39,7 @@ classdef EEGData < handle
             obj.Channel = dictionary(channels,1:numel(channels));
             obj.linkSources()
         end
-
+        function filtered = filterData(obj,task)
+        end
     end
 end

@@ -1,6 +1,8 @@
 taskfft = abs(fft(H_Test1.Data(:,:,1),[],2));
 taskfft = taskfft./max(taskfft,[],2);
 subnum = 1:13;
+len = length(signals);
+Hz = fs/len*(0:len-1);
 figure;
 hold on;
 
@@ -13,3 +15,4 @@ ylabel('Subject');
 zlabel('|FFT|');
 title('3D Plot of Subject FFTs');
 grid on;
+xlim([0 128])
