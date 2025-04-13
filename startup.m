@@ -24,3 +24,7 @@ ButterBP = designfilt('bandpassiir', ...
     'StopbandAttenuation2',40, ...
     'SampleRate',256);
 %}
+load("FC.mat")
+load("FADHD.mat")
+load("MADHD.mat")
+load("MC.mat")
