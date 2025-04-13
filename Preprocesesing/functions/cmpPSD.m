@@ -1,8 +1,8 @@
-function cmpPSD(Test, colors, freqrange, channels)
+function cmpPSD(Test, freqrange, colors, channels)
     arguments
         Test
-        colors
         freqrange
+        colors = lines(Test.Nchannels)
         channels = [];
     end
     if isempty(channels)
@@ -23,7 +23,7 @@ function cmpPSD(Test, colors, freqrange, channels)
         for j = channelnum
         [pxx, f] =periodogram(x(i,:,j),rectwin(N),N,fs);
         db = 10*log10(pxx);
-        plot3(f,(i-0.2+(j-1)*0.4/(L-1))*ones(size(f)),db,'Color',colors(j));
+        plot3(f,(i-0.2+(j-1)*0.4/(L-1))*ones(size(f)),db,'Color',colors(j,:));
         end
     end
     hold off
@@ -35,8 +35,8 @@ function cmpPSD(Test, colors, freqrange, channels)
     yticks(0:Test.Subnum)
     yticklabels(0:Test.Subnum)
     grid on
+    legend off
     view(90,0);
-    legend(channels)
     if nargin > 3
         xlim(freqrange);
     end

@@ -1,28 +1,40 @@
-function subjectComparisonPlot(Test, channel)
+function subjectComparisonPlot(Test, channel, data)
+    arguments
+        Test
+        channel = 1
+        data = []
+    end
 
-if nargin < 2
-    channel = 1;
-elseif isstring(channel)
-    channel = Test.Channel(channel);
-end
-fs = Test.Source.samplerate;
-taskfft = abs(fft(Test.Data(:,:,channel),[],2));
-taskfft = taskfft./max(taskfft,[],2);
-len = length(Test.Data);
-Hz = fs/len*(0:len-1);
-hold on;
+    if isstring(channel)
+        channel = Test.Channel(channel);
+    end
 
-for i = 1:size(taskfft, 1)
-    plot3(Hz, i * ones(size(Hz)), taskfft(i, :));  % x=freq, y=subject#, z=FFT
-end
+    % Get sample rate and number of samples
+    fs = Test.samplerate;
+    N = size(Test.Data, 2);  % time samples
 
-xlabel('Frequency (Hz)');
-ylabel('Subject');
-zlabel('|FFT|');
-title('3D Plot of Subject FFTs');
-grid on;
-yticks(1:Test.Subnum);
-view(45,60);
-xlim([0 128])
-hold off
+    % If no data provided, default to normalized FFT
+    if isempty(data)
+        raw = Test.Data(:, :, channel);  % [subjects x time]
+        fftdata = abs(fft(raw, [], 2));  % FFT along time axis
+        data = fftdata ./ max(fftdata, [], 2);  % normalize each subject
+    end
+
+    % X-axis: Frequency
+    Hz = fs / N * (0:N-1);
+
+    % Plot
+    hold on;
+    for i = 1:size(data, 1)
+        plot3(Hz, i * ones(size(Hz)), data(i, :));
+    end
+    hold off;
+
+    ylabel('Subject');
+    title('3D Subject Comparison Plot');
+    grid on;
+    yticks(1:Test.Subnum);
+    yticklabels("S" + string(1:Test.Subnum));
+    view(45, 60);
+    xlim([0 fs/2]);
 end

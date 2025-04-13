@@ -13,6 +13,7 @@ classdef EEGTest < handle
         Data             % full data for task
         Channel
         Channels
+        Nchannels
         Subnum
         samplerate
     end
@@ -73,6 +74,9 @@ classdef EEGTest < handle
         end
         function prop = get.samplerate(obj)
             prop = obj.Source.samplerate;
+        end
+        function prop = get.Nchannels(obj)
+            prop = size(obj.Data,3);
         end
     end
 end
