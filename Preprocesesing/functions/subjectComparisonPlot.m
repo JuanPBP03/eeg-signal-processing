@@ -32,6 +32,8 @@ function subjectComparisonPlot(Test, channel, data)
 
     ylabel('Subject');
     title('3D Subject Comparison Plot');
+    xlabel('Frequency(Hz)')
+    zlabel("Normalized |FFT|")
     grid on;
     yticks(1:Test.Subnum);
     yticklabels("S" + string(1:Test.Subnum));

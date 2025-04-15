@@ -63,7 +63,7 @@ classdef EEGTest < handle
         end
 
         function prop = get.times(obj)
-            prop = 0:(1/obj.Source.samplerate):obj.Duration;
+            prop = (0:(obj.samples-1))/obj.samplerate;
         end
         function prop = get.Duration(obj)
             prop = obj.samples/obj.Source.samplerate;
@@ -107,9 +107,9 @@ classdef EEGTest < handle
             keep = setdiff(1:size(obj.Data,1), exclude);  % rows to keep
             obj.Data = obj.Data(keep, :, :);
         end
-        function filtered = filterData(obj, filter)
+        function filtered = filterData(obj, fil)
                 raw = pagetranspose(obj.Data);
-                filtered = pagetranspose(filtfilt(filter,raw));
+                filtered = pagetranspose(filtfilt(fil,raw));
         end
         function set.Data(obj, data)
             obj.Source.Data(obj.Id) = {data};
