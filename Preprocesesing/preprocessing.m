@@ -41,13 +41,13 @@ plotPSDComparisonGrid(HCFF,ACFF);
 
 %% ===== Bulk Plotting Functions =====
 function plotFFTComparisonGrid(H, A)
-
+    tiledlayout(2,6,"Padding","compact");
     for i = 1:(H.Ntests)
-        subplot(2, H.Ntests, i);
+        nexttile(i)
         subjectComparisonPlot(H.Task(i));
         title("Healthy Task " + string(i));
 
-        subplot(2, H.Ntests, i+6);
+        nexttile(i+H.Ntests)
         subjectComparisonPlot(A.Task(i));
         title("ADHD Task " + string(i));
 
@@ -55,25 +55,28 @@ function plotFFTComparisonGrid(H, A)
 end
 
 function plotStackedEEGComparisonGrid(H, A)
+tiledlayout(2,6,"Padding","compact");    
     for i = 1:(H.Ntests)
-        subplot(2, H.Ntests, i);
+        nexttile(i)
         plotStackedEEG(H.Task(i));
         title("Healthy Task " + string(i));
-
-        subplot(2, H.Ntest, i+6);
+        xlim([0 H.Test(i).Duration])
+        nexttile(i+H.Ntests)
         plotStackedEEG(A.Task(i));
         title("ADHD Task " + string(i));
+        xlim([0 A.Test(i).Duration])
     end
 end
 function plotPSDComparisonGrid(H, A)
     fmax = 100;
+    tiledlayout(2,6,"Padding","compact");
     for i = 1:(H.Ntests)
-        subplot(2, H.Ntests, i);
+        nexttile(i)
         cmpPSD(H.Task(i));
         title("Healthy Task " + string(i));
         xlim([0, fmax]);
 
-        subplot(2, H.Ntests, i+6);
+        nexttile(i+H.Ntests)
         cmpPSD(A.Task(i));
         title("ADHD Task " + string(i));
         xlim([0, fmax]);

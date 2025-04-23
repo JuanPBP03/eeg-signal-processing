@@ -40,7 +40,7 @@ function plotStackedEEG(Test, channels, spacing)
     % Y-axis ticks and labels
     yticks(spacing * (0:nSub-1));
     yticklabels("S" + string(1:nSub));
-
+    
     xlabel("Time (s)");
     ylabel("Subject");
     title("Stacked EEG Signals by Subject and Channel");
