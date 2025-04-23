@@ -45,7 +45,7 @@ function plotFFTComparisonGrid(H, A)
     for i = 1:(H.Ntests)
         nexttile(i)
         subjectComparisonPlot(H.Task(i));
-        title("Healthy Task " + string(i));
+        title("Control Task " + string(i));
 
         nexttile(i+H.Ntests)
         subjectComparisonPlot(A.Task(i));
@@ -59,7 +59,7 @@ tiledlayout(2,6,"Padding","compact");
     for i = 1:(H.Ntests)
         nexttile(i)
         plotStackedEEG(H.Task(i));
-        title("Healthy Task " + string(i));
+        title("Control Task " + string(i));
         xlim([0 H.Task(i).Duration])
         nexttile(i+H.Ntests)
         plotStackedEEG(A.Task(i));
@@ -73,7 +73,7 @@ function plotPSDComparisonGrid(H, A)
     for i = 1:(H.Ntests)
         nexttile(i)
         cmpPSD(H.Task(i));
-        title("Healthy Task " + string(i));
+        title("Control Task " + string(i));
         xlim([0, fmax]);
 
         nexttile(i+H.Ntests)
