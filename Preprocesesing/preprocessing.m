@@ -60,11 +60,11 @@ tiledlayout(2,6,"Padding","compact");
         nexttile(i)
         plotStackedEEG(H.Task(i));
         title("Healthy Task " + string(i));
-        xlim([0 H.Test(i).Duration])
+        xlim([0 H.Task(i).Duration])
         nexttile(i+H.Ntests)
         plotStackedEEG(A.Task(i));
         title("ADHD Task " + string(i));
-        xlim([0 A.Test(i).Duration])
+        xlim([0 A.Task(i).Duration])
     end
 end
 function plotPSDComparisonGrid(H, A)
